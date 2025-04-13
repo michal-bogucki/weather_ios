@@ -86,7 +86,6 @@ struct TomorrowScreenContainer: View {
             .edgesIgnoringSafeArea(.top)
             .foregroundColor(location.condition.textColor)
             .background(location.condition.backgroundColor)
-            
         }
     }
 }

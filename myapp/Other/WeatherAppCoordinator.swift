@@ -13,12 +13,14 @@ class WeatherAppCoordinator {
     private let resolver: Resolver
     private let window: UIWindow
     private var cancellables = [AnyCancellable]()
+    private let locationService: LocationService
     
     private var childCoordinators: [AnyObject] = []
     
     init(resolver: Resolver,window: UIWindow) {
         self.resolver = resolver
         self.window = window
+        self.locationService = resolver.resolve(LocationService.self)!
     }
     
     func start() {
@@ -48,7 +50,7 @@ class WeatherAppCoordinator {
         
         tabBarController.setViewControllers([todayWeather, tomorrowWeather, forecastWeather], animated: false)
         
-        if let defaultLocation = sampleData.first {
+        if let defaultLocation = locationService.sampleWeather.first {
             let appearance = UITabBarAppearance()
             appearance.configureWithOpaqueBackground()
             appearance.backgroundColor = UIColor(defaultLocation.condition.backgroundColor)

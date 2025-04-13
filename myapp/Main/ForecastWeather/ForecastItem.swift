@@ -119,7 +119,7 @@ struct ForecastItem: View {
 
 
 #Preview {
-    let days = sampleData[0].weeklyForecast[0]
+    let days = sampleDailyForecasts[1]
     return ForecastItem(
         day: days,
         isExpanded: true,

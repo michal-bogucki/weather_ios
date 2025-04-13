@@ -26,9 +26,67 @@ struct WeatherLocation {
     let moonPhase: String
     let precipitation: Int
     let condition: WeatherConditionIcon
+    let weeklyForecast: [DailyForecast]
+}
+
+struct DailyForecast: Identifiable {
+    let id = UUID()
+    let day: String             // Nazwę dnia, np. "Poniedziałek"
+    let date: String            // Datę, np. "13 kwietnia"
+    let high: Int               // Najwyższa temperatura dnia
+    let low: Int                // Najniższa temperatura dnia
+    let condition: WeatherConditionIcon  // Warunki pogodowe
+    let precipitation: Int      // Prawdopodobieństwo opadów (%)
+    let wind: Int               // Prędkość wiatru (km/h)
+    let uvIndex: Int            // Indeks UV
+    let humidity: Int           // Wilgotność (%)
+    let sunrise: String         // Czas wschodu słońca
+    let sunset: String          // Czas zachodu słońca
+    let pressure: Int           // Ciśnienie atmosferyczne (hPa)
+    let visibility: Int         // Widoczność (km)
 }
 
 class WeatherViewModelMapper {
+    
+    static func mapToDailyForecasts(from response: WeatherResponse) -> [DailyForecast] {
+            guard let forecastDays = response.forecast?.forecastday else {
+                return []
+            }
+            
+            return forecastDays.map { forecastDay in
+                // Format daty
+                let dateFormatter = DateFormatter()
+                dateFormatter.locale = Locale(identifier: "pl_PL")
+                
+                // Format nazwy dnia
+                dateFormatter.dateFormat = "EEEE"
+                let date = Date(timeIntervalSince1970: TimeInterval(forecastDay.dateEpoch))
+                let dayName = dateFormatter.string(from: date)
+                
+                // Format daty
+                dateFormatter.dateFormat = "d MMMM"
+                let dateString = dateFormatter.string(from: date)
+                
+                // Warunki pogodowe
+                let conditionIcon = WeatherConditionIcon.fromCode(forecastDay.day.condition.code, isDay: true)
+                
+                return DailyForecast(
+                    day: dayName,
+                    date: dateString,
+                    high: Int(forecastDay.day.maxtempC.rounded()),
+                    low: Int(forecastDay.day.mintempC.rounded()),
+                    condition: conditionIcon,
+                    precipitation: forecastDay.day.dailyChanceOfRain,
+                    wind: Int(forecastDay.day.maxwindKph.rounded()),
+                    uvIndex: Int(forecastDay.day.uv.rounded()),
+                    humidity: Int(forecastDay.day.avghumidity.rounded()),
+                    sunrise: forecastDay.astro.sunrise,
+                    sunset: forecastDay.astro.sunset,
+                    pressure: 1015, // Wartość domyślna, ponieważ API nie zawiera tego w prognozie dziennej
+                    visibility: Int(forecastDay.day.avgvisKm.rounded())
+                )
+            }
+        }
     
     /// Mapuje odpowiedź z API na model lokalizacji
     static func mapToLocation(from response: WeatherResponse) -> WeatherLocation {
@@ -75,7 +133,8 @@ class WeatherViewModelMapper {
             airQuality: "Dobra", // Domyślna wartość, jeśli nie ma w API
             moonPhase: moonPhase,
             precipitation: precipitation,
-            condition: conditionIcon
+            condition: conditionIcon,
+            weeklyForecast: mapToDailyForecasts(from: response)
         )
     }
 }

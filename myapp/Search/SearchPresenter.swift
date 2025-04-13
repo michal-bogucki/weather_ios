@@ -8,6 +8,11 @@ import Combine
 import SwiftUI
 
 class SearchPresenter : ObservableObject {
+    
+    struct Input {
+        let locationService: LocationService
+    }
+    
     enum Output {
         case backToMain
         case citySearch(WeatherLocation)
@@ -16,14 +21,17 @@ class SearchPresenter : ObservableObject {
 
     @Published var recentLocations: [WeatherLocation]
     @Published var searchText: String = ""
-    
+    private let input: Input
     lazy var output = makeOutput().share()
     
     let didTapBack = PassthroughSubject<Void, Never>()
     let didSelectCity = PassthroughSubject<WeatherLocation, Never>()
     
-    init() {
-        self.recentLocations = sampleData
+    init(
+        input: Input
+    ) {
+        self.input = input
+        self.recentLocations = input.locationService.sampleWeather
     }
     
 }

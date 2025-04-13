@@ -26,7 +26,7 @@ class DetailsCoordinator {
         let detailsPresenter = resolver.resolve(
             DetailsPresenter.self,
             argument: DetailsPresenter.Input(
-            locationSelectedInput: locationService.locationSelected,
+            locationSelectedInput: locationService.dailyForecastSelected,
             locationService: locationService
             )
         )!

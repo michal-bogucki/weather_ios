@@ -29,9 +29,9 @@ struct ForecastScreenContainer: View {
             )
         }
         ZStack {
-            // Background with gradient and dynamic weather elements
-            VStack(spacing: 0) {
-                // Content
+           
+            VStack {
+                
                 HStack {
                     TitleApp(location: location)
                         .frame(maxWidth: .infinity, alignment: .center)
@@ -45,33 +45,34 @@ struct ForecastScreenContainer: View {
                     .padding(.horizontal,16)
                 }
                 
-                ScrollView {
+               
                         // 6-Day Forecast section
-                        VStack(alignment: .leading, spacing: 16) {
-                            // Section header
-                            HStack {
-                                Text("6-DAY FORECAST")
-                                    .font(.system(size: 14, weight: .semibold))
-                                    .tracking(1)
-                                    .foregroundColor(location.condition.textColor.opacity(0.9))
-                                
-                                Spacer()
-                                
-                                HStack(spacing: 5) {
-                                    Image(systemName: "calendar")
-                                        .font(.system(size: 12))
-                                    Text("Daily")
-                                        .font(.system(size: 12, weight: .medium))
-                                }
-                                .foregroundColor(location.condition.textColor.opacity(0.7))
-                                .padding(.horizontal, 10)
-                                .padding(.vertical, 6)
-                                .background(Color.white.opacity(0.15))
-                                .cornerRadius(12)
-                            }
-                            .padding(.horizontal)
-                            .padding(.vertical, 10)
-                            
+                VStack(alignment: .leading, spacing: 16) {
+                    // Section header
+                    HStack {
+                        Text("6-DAY FORECAST")
+                            .font(.system(size: 14, weight: .semibold))
+                            .tracking(1)
+                            .foregroundColor(location.condition.textColor.opacity(0.9))
+                        
+                        Spacer()
+                        
+                        HStack(spacing: 5) {
+                            Image(systemName: "calendar")
+                                .font(.system(size: 12))
+                            Text("Daily")
+                                .font(.system(size: 12, weight: .medium))
+                        }
+                        .foregroundColor(location.condition.textColor.opacity(0.7))
+                        .padding(.horizontal, 10)
+                        .padding(.vertical, 6)
+                        .background(Color.white.opacity(0.15))
+                        .cornerRadius(12)
+                    }
+                    .padding(.horizontal)
+                    .padding(.vertical, 10)
+                }
+                  ScrollView {
                             // Enhanced forecast cards
                             ForEach(Array(location.weeklyForecast.enumerated()), id: \.element.id) { index, day in
                                 ForecastItem(
@@ -87,7 +88,7 @@ struct ForecastScreenContainer: View {
                                         }
                                     },
                                     onViewDetails: {
-                                        presenter.didTapOpenDetails.send(sampleData[0])
+                                        presenter.didTapOpenDetails.send(day)
                                     },
                                     textColor: location.condition.textColor
                                 )
@@ -95,9 +96,9 @@ struct ForecastScreenContainer: View {
                                 .padding(.bottom, 10)
                             }
 
-                    }.padding(.top, 8)
+                    }
                 }
-            }
+            
         }
         .padding(.top, 80)
         .edgesIgnoringSafeArea(.top)
@@ -117,7 +118,7 @@ struct ForecastScreenContainer: View {
     
     let presenter = ForecastWeatherPresenter(input: input)
     
-    locationSelectedInput.send(sampleData[0])
+    locationSelectedInput.send(sampleData[5])
     
     return ForecastScreenContainer(
         presenter: presenter

@@ -10,7 +10,7 @@ import SwiftUI
 class DetailsPresenter : ObservableObject {
     
     struct Input {
-        let locationSelectedInput: PassthroughSubject<WeatherLocation, Never>
+        let locationSelectedInput: PassthroughSubject<DailyForecast, Never>
         let locationService: LocationService
     }
     
@@ -18,7 +18,7 @@ class DetailsPresenter : ObservableObject {
         case backToMain
     }
     
-    @Published var selectedLocation: WeatherLocation
+    @Published var selectedLocation: DailyForecast
     
     lazy var output = makeOutput().share()
     
@@ -32,7 +32,7 @@ class DetailsPresenter : ObservableObject {
         input: Input
     ) {
         self.input = input
-        self.selectedLocation = input.locationService.currentLocation
+        self.selectedLocation = input.locationService.currentDaily
         setupBindings()
     }
 }

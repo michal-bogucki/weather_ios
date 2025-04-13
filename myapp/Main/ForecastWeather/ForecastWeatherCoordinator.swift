@@ -41,7 +41,7 @@ class ForecastWeatherCoordinator {
                 case .searchTapped:
                     self.showSearchScreen()
                 case .openDetails(let location):
-                    self.locationService.locationSelected.send(location)
+                    self.locationService.dailyForecastSelected.send(location)
                     self.showDetailsScreen()
                 }
             }

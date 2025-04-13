@@ -48,8 +48,8 @@ final class AppAssembly: Assembly {
             SearchCoordinator(navigationController: navigationController, resolver: r)
         }
         
-        container.register(SearchPresenter.self) { _ in
-            SearchPresenter()
+        container.register(SearchPresenter.self) { r , input in
+            SearchPresenter(input: input)
         }
         
         container.register(LocationService.self) { _ in

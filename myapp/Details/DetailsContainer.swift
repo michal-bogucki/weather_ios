@@ -12,8 +12,7 @@ struct DetailsContainer: View {
     @ObservedObject var presenter: DetailsPresenter
     
     var body: some View {
-        let location = presenter.selectedLocation
-        let day = location.weeklyForecast[0]
+        let day = presenter.selectedLocation
         VStack(alignment: .leading, spacing: 0) {
             
             HStack {
@@ -40,12 +39,12 @@ struct DetailsContainer: View {
             .padding(16)
             
             ZStack {
-                WeatherArtView(condition: location.condition, size: 180)
+                WeatherArtView(condition: day.condition, size: 180)
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 40)
                 
                 GeometryReader { geometry in
-                    Text(location.condition.displayName)
+                    Text(day.condition.displayName)
                         .font(.system(size: 32, weight: .light))
                         .rotationEffect(.degrees(-90))
                         .position(
@@ -88,7 +87,7 @@ struct DetailsContainer: View {
         }
         .padding(.top, 80)
         .edgesIgnoringSafeArea(.top)
-        .foregroundColor(location.condition.textColor)
-        .background(location.condition.backgroundColor)
+        .foregroundColor(day.condition.textColor)
+        .background(day.condition.backgroundColor)
     }
 }

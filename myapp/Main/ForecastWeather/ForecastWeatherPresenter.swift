@@ -16,7 +16,7 @@ class ForecastWeatherPresenter: ObservableObject {
     
     enum Output {
         case searchTapped
-        case openDetails(WeatherLocation)
+        case openDetails(DailyForecast)
     }
     
     @Published var selectedLocation: WeatherLocation
@@ -24,7 +24,7 @@ class ForecastWeatherPresenter: ObservableObject {
     lazy var output = makeOutput().share()
     
     let didTapSearch = PassthroughSubject<Void, Never>()
-    let didTapOpenDetails = PassthroughSubject<WeatherLocation, Never>()
+    let didTapOpenDetails = PassthroughSubject<DailyForecast, Never>()
     
     private let input: Input
     
@@ -48,7 +48,7 @@ private extension ForecastWeatherPresenter {
     func makeOutput() -> AnyPublisher<Output, Never> {
         Publishers.Merge(
             didTapSearch.map { _ in Output.searchTapped },
-            didTapOpenDetails.map { lock in Output.openDetails(lock) }
+            didTapOpenDetails.map { daily in Output.openDetails(daily) }
         )
         .eraseToAnyPublisher()
     }

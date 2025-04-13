@@ -38,51 +38,56 @@ struct SearchContainer: View {
                 .padding(.horizontal)
                 .padding(.bottom, 12)
             
-            
-            ForEach(Array(presenter.recentLocations.enumerated()), id: \.element.id) { index, loc in
-                Button(action: {presenter.didSelectCity.send(loc) }){
-                    HStack {
-                        VStack(alignment: .leading) {
-                            Text(loc.name)
-                                .font(.system(size:16,weight: .medium))
-                                .foregroundColor(Color(hex: "333333"))
-                            
-                            Text(loc.country)
-                                .font(.system(size:14,weight: .medium))
-                                .foregroundColor(Color(hex: "666666"))
+            ScrollView{
+                ForEach(Array(presenter.recentLocations.enumerated()), id: \.element.id) { index, loc in
+                    Button(action: {presenter.didSelectCity.send(loc) }){
+                        HStack {
+                            VStack(alignment: .leading) {
+                                Text(loc.name)
+                                    .font(.system(size:16,weight: .medium))
+                                    .foregroundColor(Color(hex: "333333"))
+                                
+                                Text(loc.country)
+                                    .font(.system(size:14,weight: .medium))
+                                    .foregroundColor(Color(hex: "666666"))
+                            }
+                            Spacer()
+                            HStack(spacing: 8) {
+                                MiniWeatherArtView(condition: loc.condition, size: 24)
+                                    .frame(width: 24, height: 24)
+                                
+                                Text("\(loc.temp)°")
+                                    .font(.system(size: 20, weight: .light))
+                                    .foregroundColor(Color(hex: "333333"))
+                                
+                            }
                         }
-                        Spacer()
-                        HStack(spacing: 8) {
-                            MiniWeatherArtView(condition: loc.condition, size: 24)
-                                .frame(width: 24, height: 24)
-                            
-                            Text("\(loc.temp)°")
-                                .font(.system(size: 20, weight: .light))
-                                .foregroundColor(Color(hex: "333333"))
-
-                        }
+                        .padding(.horizontal)
+                        .padding(.vertical, 12)
                     }
+                    .background(Color.white)
+                    .cornerRadius(12)
+                    .shadow(color: Color.black.opacity(0.2), radius: 5, x: 0, y: 2)
                     .padding(.horizontal)
-                    .padding(.vertical, 12)
+                    .padding(.bottom, 8)
+                    .buttonStyle(PlainButtonStyle())
                 }
-                .background(Color.white)
-                .cornerRadius(12)
-                .shadow(color: Color.black.opacity(0.2), radius: 5, x: 0, y: 2)
-                .padding(.horizontal)
-                .padding(.bottom, 8)
-                .buttonStyle(PlainButtonStyle())
-            }
-            
-            Spacer()
+                
+                Spacer()
+            }.padding(.bottom,24)
         }
         .padding(.top,50)
+        
         .background(Color(hex: "F5F5F5"))
         .edgesIgnoringSafeArea(.all)
     }
 }
 
 #Preview {
-    let presenter = SearchPresenter()
+    let input = SearchPresenter.Input(
+        locationService: LocationService.shared
+    )
+    let presenter = SearchPresenter(input: input)
     return SearchContainer(presenter: presenter)
 }
 
@@ -145,7 +150,7 @@ struct RecentSearchesSection: View {
             
             ForEach(Array(presenter.recentLocations.enumerated()), id: \.element.id) { index, loc in
                 RecentLocationRow(location: loc) {
-                    presenter.didSelectCity.send(sampleData[1])
+                    presenter.didSelectCity.send(WeatherViewModelMapper.mapToLocation(from: sample1))
                 }
             }
         }
@@ -221,10 +226,11 @@ struct PopularCitiesSection: View {
     private func popularCityButton(for city: String) -> some View {
         Button(action: {
             if let location = presenter.recentLocations.first(where: { $0.name == city }) {
-                presenter.didSelectCity.send(sampleData[1])
+                presenter.didSelectCity.send(location)
             } else if let location = sampleData.first(where: { $0.name == city }) {
-                presenter.didSelectCity.send(sampleData[1])
+                presenter.didSelectCity.send(location)
             }
+            
         }) {
             Text(city)
                 .font(.system(size: 16, weight: .medium))

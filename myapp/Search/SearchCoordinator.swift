@@ -27,7 +27,12 @@ class SearchCoordinator {
     }
     
     func start() -> AnyPublisher<SearchResult, Never> {
-        let searchPresenter = resolver.resolve(SearchPresenter.self)!
+        let searchPresenter = resolver.resolve(
+            SearchPresenter.self,
+            argument: SearchPresenter.Input(
+            locationService: locationService
+            )
+        )!
         let searchScreen = SearchContainer(presenter: searchPresenter)
         let searchVC = CustomHostingController(rootView: searchScreen)
         searchVC.hidesBottomBarWhenPushed = true
