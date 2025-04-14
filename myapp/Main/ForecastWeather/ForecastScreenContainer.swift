@@ -44,11 +44,8 @@ struct ForecastScreenContainer: View {
                     .frame(width: 50)
                     .padding(.horizontal,16)
                 }
-                
-               
-                        // 6-Day Forecast section
+
                 VStack(alignment: .leading, spacing: 16) {
-                    // Section header
                     HStack {
                         Text("6-DAY FORECAST")
                             .font(.system(size: 14, weight: .semibold))
@@ -73,7 +70,7 @@ struct ForecastScreenContainer: View {
                     .padding(.vertical, 10)
                 }
                   ScrollView {
-                            // Enhanced forecast cards
+
                             ForEach(Array(location.weeklyForecast.enumerated()), id: \.element.id) { index, day in
                                 ForecastItem(
                                     day: day,

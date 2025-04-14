@@ -191,7 +191,6 @@ struct ShowMoreButton: View {
             }
         }) {
             HStack {
-                // Linia z gradientem (zachowana z oryginalnego przycisku)
                 LinearGradient(
                     gradient: Gradient(colors: [
                         textColor.opacity(0),
@@ -202,8 +201,7 @@ struct ShowMoreButton: View {
                     endPoint: .trailing
                 )
                 .frame(height: 1)
-                
-                // Środkowy element w stylu neumorficznym
+        
                 Image(systemName: showMore ? "minus" : "plus")
                     .font(.system(size: 14, weight: .medium))
                     .foregroundColor(textColor)
